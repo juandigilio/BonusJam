@@ -1,0 +1,25 @@
+﻿  ColissionManager.cpp
+D:\Facultad\Algebra\BricksBreaker\BricksBreaker\ColissionManager.cpp(358,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  GameFunctions.cpp
+D:\Facultad\Algebra\BricksBreaker\BricksBreaker\GameFunctions.cpp(43,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  GameLoop.cpp
+D:\Facultad\Algebra\BricksBreaker\BricksBreaker\GameLoop.cpp(45,38): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Facultad\Algebra\BricksBreaker\BricksBreaker\GameLoop.cpp(46,38): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Facultad\Algebra\BricksBreaker\BricksBreaker\GameLoop.cpp(126,27): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Facultad\Algebra\BricksBreaker\BricksBreaker\GameLoop.cpp(130,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Facultad\Algebra\BricksBreaker\BricksBreaker\GameLoop.cpp(169,53): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Facultad\Algebra\BricksBreaker\BricksBreaker\GameLoop.cpp(203,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Facultad\Algebra\BricksBreaker\BricksBreaker\GameLoop.cpp(216,37): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  MenuManager.cpp
+  Generating code
+  5 of 101 functions ( 5.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  BricksBreaker.vcxproj -> D:\Facultad\Algebra\BricksBreaker\Release\BricksBreaker.exe
+  D:\Facultad\Algebra\BricksBreaker\lib\sigil-vc2015\dll\glew32.dll
+  D:\Facultad\Algebra\BricksBreaker\lib\sigil-vc2015\dll\OpenAL32.dll
+  D:\Facultad\Algebra\BricksBreaker\lib\sigil-vc2015\dll\sigil.dll
+  D:\Facultad\Algebra\BricksBreaker\lib\sigil-vc2015\dll\wrap_oal.dll
+  4 File(s) copied
+  0 File(s) copied
