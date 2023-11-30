@@ -29,6 +29,8 @@ namespace Globals
 {
 	extern RenderWindow window;
 
+	extern Event event;
+
 	extern const int screenWidth;
 	extern const int screenHeight;
 	extern int activeBricks;
@@ -81,19 +83,15 @@ namespace Assets
 	extern Sprite bigBrick;
 	extern Sprite stoneBrick[5];
 
-	extern int acidPosX;
-	extern int acidPosY;
-	extern int icePosX;
-	extern int icePosY;
-	extern int bigPosX;
-	extern int bigPosY;
-	extern int stonePosX;
-	extern int stonePosY;
+	extern Text playText;
+	extern Text exitText;
+	extern Text creditsText;
+	extern Text instructionsText;
 
 	extern int menuSizeX;
 	extern int menuSizeY;
 
 	//Fonts
-	extern int menuFont;
+	extern Font menuFont;
 };
 

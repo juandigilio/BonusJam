@@ -24,6 +24,7 @@ void InitMenu()
 	else
 	{
 		menuBackground.setTexture(texture);
+		menuBackground.setScale(1.2f, 1.2f);
 	}
 
 	if (!texture.loadFromFile("../Assets/Images/acid.png"))
@@ -62,165 +63,251 @@ void InitMenu()
 		stoneBrick[0].setTexture(texture);
 	}
 
-	menuFont = slLoadFont("../Assets/Fonts/DelaGothic.ttf");
-
-	slSetTextAlign(SL_ALIGN_CENTER);
-
-	acidPosX = screenWidth / 2;
-	acidPosY = ((screenHeight / 5) * 4);
-	icePosX = screenWidth / 2;
-	icePosY = ((screenHeight / 5) * 3);
-	bigPosX = screenWidth / 2;
-	bigPosY = ((screenHeight / 5) * 2);
-	stonePosX = (screenWidth / 2);
-	stonePosY = (screenHeight / 5);
+	if (!menuFont.loadFromFile("../Assets/Fonts/DelaGothic.ttf"))
+	{
+		cout << ">>> Font load failed! <<<" << endl;
+	}
 
 	menuSizeX = 200;
-	menuSizeY = 80;
+	menuSizeY = 85;
+
+	acidBrick.setPosition(screenWidth / 2.0f, (screenHeight / 5.0f) * 4.0f);
+	acidBrick.setScale(0.5f, 0.5f);
+
+	iceBrick.setPosition(screenWidth / 2.0f, (screenHeight / 5.0f) * 3.0f);
+	iceBrick.setScale(0.5f, 0.5f);
+
+	bigBrick.setPosition(screenWidth / 2.0f, (screenHeight / 5.0f) * 2.0f);
+	bigBrick.setScale(0.5f, 0.5f);
+
+	stoneBrick[0].setPosition(screenWidth / 2.0f, screenHeight / 5.0f);
+	stoneBrick[0].setScale(0.5f, 0.5f);
+
+	playText.setString("Play");
+	playText.setPosition(acidBrick.getPosition());
+	playText.setFont(menuFont);
+	playText.setCharacterSize(50);
+
+	exitText.setString("Exit");
+	exitText.setPosition(stoneBrick[0].getPosition());
+	exitText.setFont(menuFont);
+	exitText.setCharacterSize(50);
+
+	creditsText.setString("Credits");
+	creditsText.setPosition(bigBrick.getPosition());
+	creditsText.setFont(menuFont);
+	creditsText.setCharacterSize(50);
+
+	instructionsText.setString("Istructions");
+	instructionsText.setPosition(iceBrick.getPosition());
+	instructionsText.setFont(menuFont);
+	instructionsText.setCharacterSize(50);
+
 }
 
-void Draw()
+static void Draw()
 {
-	(menuBackground, screenWidth / 2, screenHeight / 2, screenWidth * 1.2, screenHeight);
-	slSprite(acidBrick, acidPosX, acidPosY, menuSizeX, menuSizeY);
-	slSprite(iceBrick, icePosX, icePosY, menuSizeX, menuSizeY);
-	slSprite(bigBrick, bigPosX, bigPosY, menuSizeX, menuSizeY);
-	slSprite(stoneBrick[0], stonePosX, stonePosY, menuSizeX, menuSizeY);
+	window.draw(menuBackground);
+	window.draw(acidBrick);
+	window.draw(iceBrick);
+	window.draw(bigBrick);
+	window.draw(stoneBrick[0]);
 
-	slSetForeColor(0.471f, 0.471f, 0.471f, 1.0f);
-
-	slSetFont(menuFont, 45);
-	slText(acidPosX, acidPosY - 6, "Play");
-
-	slSetFont(menuFont, 40);
-	slText(stonePosX - 3, stonePosY - 22, "Exit");
-
-	slSetFont(menuFont, 30);
-	slText(bigPosX, bigPosY - 9, "Credits");
-
-	slSetFont(menuFont, 25);
-	slText(icePosX, icePosY - 6, "Istructions");
-
-	slSetForeColor(1.0f, 1.0f, 1.0f, 1.0f);
+	window.draw(playText);
+	window.draw(exitText);	
+	window.draw(creditsText);
+	window.draw(instructionsText);
 }
 
-void GetInput(GameSceen& currentSceen)
+static void GetInput(GameSceen& currentSceen)
 {
-	slSetForeColor(1.0f, 0.47f, 0.0f, 1.0f);
+	//slSetForeColor(1.0f, 0.47f, 0.0f, 1.0f);
+	Event menuEvent;
 
-	if ((slGetMouseX() > acidPosX - menuSizeX / 2 && slGetMouseX() < acidPosX + menuSizeX / 2) &&
-		(slGetMouseY() > acidPosY - menuSizeY / 2 && slGetMouseY() < acidPosY + menuSizeY / 2))
+	Vector2i cursor = Mouse::getPosition();
+
+	if (cursor.x >= acidBrick.getPosition().x &&
+		cursor.x <= acidBrick.getPosition().x + acidBrick.getGlobalBounds().width &&
+		cursor.y >= acidBrick.getPosition().y &&
+		cursor.y <= acidBrick.getPosition().y + acidBrick.getGlobalBounds().height) 
 	{
-		slSetFont(menuFont, 45);
-		slText(acidPosX, acidPosY - 6, "Play");
 
-		if (slGetMouseButton(SL_MOUSE_BUTTON_LEFT))
+		playText.setFillColor(Color::Yellow);
+		window.draw(playText);
+
+		if (Mouse::isButtonPressed(Mouse::Button::Left))
 		{
 			currentSceen = GameSceen::GAME;
 		}
 	}
-	else if ((slGetMouseX() > stonePosX - menuSizeX / 2 && slGetMouseX() < stonePosX + menuSizeX / 2) &&
-		(slGetMouseY() > stonePosY - menuSizeY / 2 && slGetMouseY() < stonePosY + menuSizeY / 2))
+	else 
 	{
-		slSetFont(menuFont, 40);
-		slText(stonePosX - 3, stonePosY - 22, "Exit");
+		playText.setFillColor(Color::White);
+	}
 
-		if (slGetMouseButton(SL_MOUSE_BUTTON_LEFT))
+	if (cursor.x >= stoneBrick[0].getPosition().x &&
+		cursor.x <= stoneBrick[0].getPosition().x + stoneBrick[0].getGlobalBounds().width &&
+		cursor.y >= stoneBrick[0].getPosition().y &&
+		cursor.y <= stoneBrick[0].getPosition().y + stoneBrick[0].getGlobalBounds().height)
+	{
+
+		exitText.setFillColor(Color::Yellow);
+		window.draw(exitText);
+
+		if (Mouse::isButtonPressed(Mouse::Button::Left))
 		{
 			currentSceen = GameSceen::EXIT;
 		}
 	}
-	else if ((slGetMouseX() > bigPosX - menuSizeX / 2 && slGetMouseX() < bigPosX + menuSizeX / 2) &&
-		(slGetMouseY() > bigPosY - menuSizeY / 2 && slGetMouseY() < bigPosY + menuSizeY / 2))
+	else
 	{
-		slSetFont(menuFont, 30);
-		slText(bigPosX, bigPosY - 9, "Credits");
+		exitText.setFillColor(Color::White);
+	}
 
-		if (slGetMouseButton(SL_MOUSE_BUTTON_LEFT))
+	if (cursor.x >= bigBrick.getPosition().x &&
+		cursor.x <= bigBrick.getPosition().x + bigBrick.getGlobalBounds().width &&
+		cursor.y >= bigBrick.getPosition().y &&
+		cursor.y <= bigBrick.getPosition().y + bigBrick.getGlobalBounds().height)
+	{
+
+		creditsText.setFillColor(Color::Yellow);
+		window.draw(creditsText);
+
+		if (Mouse::isButtonPressed(Mouse::Button::Left))
 		{
 			currentSceen = GameSceen::CREDITS;
 		}
 	}
-	else if ((slGetMouseX() > icePosX - menuSizeX / 2 && slGetMouseX() < icePosX + menuSizeX / 2) &&
-		(slGetMouseY() > icePosY - menuSizeY / 2 && slGetMouseY() < icePosY + menuSizeY / 2))
+	else
 	{
-		slSetFont(menuFont, 25);
-		slText(icePosX, icePosY - 6, "Istructions");
+		creditsText.setFillColor(Color::White);
+	}
+	
+	if (cursor.x >= iceBrick.getPosition().x &&
+		cursor.x <= iceBrick.getPosition().x + iceBrick.getGlobalBounds().width &&
+		cursor.y >= iceBrick.getPosition().y &&
+		cursor.y <= iceBrick.getPosition().y + iceBrick.getGlobalBounds().height)
+	{
 
-		if (slGetMouseButton(SL_MOUSE_BUTTON_LEFT))
+		instructionsText.setFillColor(Color::Yellow);
+		window.draw(instructionsText);
+
+		if (Mouse::isButtonPressed(Mouse::Button::Left))
 		{
 			currentSceen = GameSceen::INSTRUCTIONS;
 		}
 	}
-
-
-	slSetForeColor(1.0f, 1.0f, 1.0f, 1.0f);
+	else
+	{
+		instructionsText.setFillColor(Color::White);
+	}
 }
 
-void ShowMenu(GameSceen& currentSceen)
+static void ShowMenu(GameSceen& currentSceen)
 {
 	Draw();
 
 	GetInput(currentSceen);
 }
 
-void ShowInstructions(GameSceen& currentSceen)
+static void ShowInstructions(GameSceen& currentSceen)
 {
-	slSetForeColor(1.0f, 1.0f, 1.0f, 0.5f);
-	slSprite(menuBackground, screenWidth / 2, screenHeight / 2, screenWidth * 1.2, screenHeight);
+	Text line1;
+	line1.setString("Use arrows to move");
+	line1.setPosition(screenWidth / 2, static_cast<double>(150));
+	line1.setFont(menuFont);
+	line1.setCharacterSize(50);
 
-	slSetForeColor(0.671f, 0.671f, 0.671f, 1.0f);
+	Text line2;
+	line2.setString("Use left CTRL to start the ball when stoped");
+	line2.setPosition(screenWidth / 2, static_cast<double>(360));
+	line2.setFont(menuFont);
+	line2.setCharacterSize(50);
 
-	slSetFont(menuFont, 25);
+	Text line3;
+	line3.setString("If an acid brick hits you, you die,");
+	line3.setPosition(screenWidth / 2, static_cast<double>(400));
+	line3.setFont(menuFont);
+	line3.setCharacterSize(50);
 
-	slText(screenWidth / 2, static_cast<double>(600), "Use arrows to move");
-	slText(screenWidth / 2, static_cast<double>(500), "Use left CTRL to start the ball when stoped");
-	slText(screenWidth / 2, static_cast<double>(400), "If an acid brick hits you, you die,");
-	slText(screenWidth / 2, static_cast<double>(360), "but if you dodge it you earn 200pts for each one");
-	slText(screenWidth / 2, static_cast<double>(150), "Press ESC to go back to the menu");
+	Text line4;
+	line4.setString("but if you dodge it you earn 200pts for each one");
+	line4.setPosition(screenWidth / 2, static_cast<double>(500));
+	line4.setFont(menuFont);
+	line4.setCharacterSize(50);
 
-	slSetForeColor(1.0f, 1.0f, 1.0f, 1.0f);
+	Text line5;
+	line5.setString("Press ESC to go back to the menu");
+	line5.setPosition(screenWidth / 2, static_cast<double>(600));
+	line5.setFont(menuFont);
+	line5.setCharacterSize(50);
 
-	if (slGetKey(SL_KEY_ESCAPE))
+
+	window.draw(menuBackground);
+
+	window.draw(line1);
+	window.draw(line2);
+	window.draw(line3);
+	window.draw(line4);
+	window.draw(line5);
+
+	if (event.type == sf::Event::KeyPressed)
 	{
-		currentSceen = GameSceen::MENU;
+		if (event.key.code == sf::Keyboard::Escape)
+		{
+			currentSceen = GameSceen::MENU;
+		}
 	}
 }
 
-void ShowCredits(GameSceen& currentSceen)
+static void ShowCredits(GameSceen& currentSceen)
 {
-	string credits = "Created by";
-	string credits2 = "Juan Ignacio Digilio";
-	string credits3 = "Image Campus student (Sigil evaluation)";
-	string credits4 = "1st year of video games development";
-	string itchio = "https://juandigilio.itch.io/";
-	string gitHub = "https://github.com/juandigilio";
-	double itchioPosX = static_cast<double>((screenWidth / 2) - (itchio.length() / 2));
-	double itchioPosY = static_cast<double>((screenHeight / 2) - 50);
-	double gitPosX = static_cast<double>((screenWidth / 2) - (gitHub.length() / 2));
-	double gitPosY = static_cast<double>((screenHeight / 2) - 70);;
+	float center = static_cast<float>(screenWidth) / 2.0f;
 
-	slSetForeColor(1.0f, 1.0f, 1.0f, 0.5f);
+	Text line1;
+	line1.setString("Created by");
+	line1.setPosition(center - (line1.getGlobalBounds().width / 2.0f), 20.0f);
+	line1.setFont(menuFont);
+	line1.setCharacterSize(50);
 
-	slSprite(menuBackground, screenWidth / 2, screenHeight / 2, screenWidth * 1.2, screenHeight);
+	Text line2;
+	line2.setString("Juan Ignacio Digilio");
+	line2.setPosition(center - (line2.getGlobalBounds().width / 2.0f), 40.0f);
+	line2.setFont(menuFont);
+	line2.setCharacterSize(50);
 
-	slSetForeColor(0.471f, 0.471f, 0.471f, 1.0f);
+	Text line3;
+	line3.setString("Image Campus student (Sigil evaluation)");
+	line3.setPosition(center - (line3.getGlobalBounds().width / 2.0f), 60.0f);
+	line3.setFont(menuFont);
+	line3.setCharacterSize(50);
 
-	slSetFont(menuFont, 35);
-	slText(static_cast<double>((screenWidth / 2) - (credits.length() / 2)), static_cast<double>((screenHeight / 2) + 50), "Created by");
-	slSetFont(menuFont, 55);
-	slText(static_cast<double>((screenWidth / 2) - (credits2.length() / 2)), static_cast<double>(screenHeight / 2), "Juan Ignacio Digilio");
+	Text line4;
+	line4.setString("1st year of video games development");
+	line4.setPosition(center - (line4.getGlobalBounds().width / 2.0f), 80.0f);
+	line4.setFont(menuFont);
+	line4.setCharacterSize(50);
 
-	slSetFont(menuFont, 14);
-	slText(static_cast<double>((screenWidth / 2) - (credits3.length() / 2)), static_cast<double>(50), "Image Campus student (Sigil evaluation)");
-	slText(static_cast<double>((screenWidth / 2) - (credits4.length() / 2)), static_cast<double>(20), "1st year of video games development");
+	Text line5;
+	line5.setString("https://juandigilio.itch.io/");
+	line5.setPosition(center - (line5.getGlobalBounds().width / 2.0f), 100.0f);
+	line5.setFont(menuFont);
+	line5.setCharacterSize(50);
 
-	slText(itchioPosX, itchioPosY, "https://juandigilio.itch.io/");
-	slText(gitPosX, gitPosY, "https://github.com/juandigilio");
+	Text line6;
+	line6.setString("https://github.com/juandigilio");
+	line6.setPosition(center - (line6.getGlobalBounds().width / 2.0f), 120.0f);
+	line6.setFont(menuFont);
+	line6.setCharacterSize(50);
 
-	slSetForeColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-
+	window.draw(menuBackground);
+	window.draw(line1);
+	window.draw(line2);
+	window.draw(line3);
+	window.draw(line4);
+	window.draw(line5);
+	window.draw(line6);
 
 	if (slGetKey(SL_KEY_ESCAPE))
 	{
@@ -267,7 +354,7 @@ void RunGame()
 	Brick bricks[bricksQnty];
 	Brick acidBricks[totalAcids];
 	Ball ball{};
-	Event event;
+	
 
 	window.create(VideoMode(200, 200), "Banana breaker");
 
