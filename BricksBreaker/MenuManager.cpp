@@ -362,8 +362,8 @@ static void ShowCredits(GameSceen& currentSceen)
 	if (TextMouseCollition(line7))
 	{
 
-		line5.setFillColor(Color::Yellow);
-		window.draw(line5);
+		line7.setFillColor(Color::Yellow);
+		window.draw(line7);
 
 		if (event.type == Event::MouseButtonPressed)
 		{
@@ -380,8 +380,8 @@ static void ShowCredits(GameSceen& currentSceen)
 	if (TextMouseCollition(line8))
 	{
 
-		line6.setFillColor(Color::Yellow);
-		window.draw(line6);
+		line8.setFillColor(Color::Yellow);
+		window.draw(line8);
 
 		if (event.type == Event::MouseButtonPressed)
 		{
@@ -398,8 +398,8 @@ static void ShowCredits(GameSceen& currentSceen)
 	if (TextMouseCollition(line9))
 	{
 
-		line6.setFillColor(Color::Yellow);
-		window.draw(line6);
+		line9.setFillColor(Color::Yellow);
+		window.draw(line9);
 
 		if (event.type == Event::MouseButtonPressed)
 		{
@@ -416,8 +416,8 @@ static void ShowCredits(GameSceen& currentSceen)
 	if (TextMouseCollition(line10))
 	{
 
-		line6.setFillColor(Color::Yellow);
-		window.draw(line6);
+		line10.setFillColor(Color::Yellow);
+		window.draw(line10);
 
 		if (event.type == Event::MouseButtonPressed)
 		{
@@ -431,7 +431,6 @@ static void ShowCredits(GameSceen& currentSceen)
 		}
 	}
 }
-
 
 void RunGame()
 {
