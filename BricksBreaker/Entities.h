@@ -2,14 +2,13 @@
 
 #include "GameData.h"
 
+#include <SFML/Graphics.hpp>
+
 struct Player
 {
-	Vector2 position;
-	Vector2 size;
-	Vector2 speed;
-	Vector2 textureSize;
+	Sprite texture;
+	Vector2f speed;
 	int availableLives;
-	int texture;
 	int points;
 	int ammo;
 	bool isAlive;
@@ -18,10 +17,8 @@ struct Player
 
 struct Ball
 {
-	Vector2 position;
-	Vector2 speed;
-	Vector2 textureSize;
-	int texture;
+	Sprite texture;
+	Vector2f speed;
 	float radius;
 	float maxSpeed;
 	bool isAlive;
@@ -31,9 +28,8 @@ struct Ball
 
 struct Brick
 {
-	Vector2 position;
-	Vector2 size;
-	Vector2 textureSize;
+	Sprite texture;
+	Vector2f position;
 	int availableLives;
 	int stoneTexturePos;
 	float lastUpdate;
@@ -42,7 +38,6 @@ struct Brick
 	float green;
 	float blue;
 	float alpha;
-	int texture;
 	bool isAlphaDown;
 	bool isAlive;
 	bool isAcid;

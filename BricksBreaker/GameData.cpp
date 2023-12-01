@@ -6,6 +6,9 @@ namespace Globals
 
 	extern Event event{};
 
+	extern Clock clock{};
+	extern Time deltaTime{};
+
 	extern const int screenWidth = 1024;
 	extern const int screenHeight = 768;
 	extern int activeBricks = 0;

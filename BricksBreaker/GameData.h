@@ -31,6 +31,9 @@ namespace Globals
 
 	extern Event event;
 
+	extern Clock clock;
+	extern Time deltaTime;
+
 	extern const int screenWidth;
 	extern const int screenHeight;
 	extern int activeBricks;

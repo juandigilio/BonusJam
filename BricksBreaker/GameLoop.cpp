@@ -14,40 +14,43 @@ using namespace Globals;
 
 static void GetInput(Player& player, Ball& ball, Brick bricks[], GameSceen& currentSceen)
 {
-	if (slGetKey(SL_KEY_LEFT))
+	if (event.type == Event::KeyPressed)
 	{
-		player.speed.x = -500.0f;
-	}
-	else if (slGetKey(SL_KEY_RIGHT))
-	{
-		player.speed.x = 500.0f;
-	}
-	else if (slGetKey(SL_KEY_ESCAPE))
-	{
-		slSoundStopAll();
-		currentSceen = GameSceen::MENU;
-	}
-	else if (slGetKey(SL_KEY_RIGHT_CONTROL) &&  ball.isStoped)
-	{
-		slSoundPlay(ballStart);
-		ball.isStoped = false;
-		ball.speed.x = 0.0f;
-		ball.speed.y = 700.0f;
-	}
-	else
-	{
-		player.speed.x = 0.0f;
+		if (event.key.code == Keyboard::Left)
+		{
+			player.speed.x = -500.0f;
+		}
+		else if (event.key.code == Keyboard::Right)
+		{
+			player.speed.x = 500.0f;
+		}
+		else if (event.key.code == Keyboard::Escape)
+		{
+			//slSoundStopAll();
+			currentSceen = GameSceen::MENU;
+		}
+		else if (event.key.code == Keyboard::RControl && ball.isStoped)
+		{
+			//slSoundPlay(ballStart);
+			ball.isStoped = false;
+			ball.speed.x = 0.0f;
+			ball.speed.y = 700.0f;
+		}
+		else
+		{
+			player.speed.x = 0.0f;
+		}
 	}
 }
 
 static void MoveEntities(Player& player, Ball& ball)
 {
-	player.position.x += player.speed.x * slGetDeltaTime();
-	player.position.y += player.speed.y * slGetDeltaTime();
+	player.position.x += player.speed.x * deltaTime;
+	player.position.y += player.speed.y * deltaTime;
 
-	if (player.position.x < 0.0f + (player.size.x / 2.0f))
+	if (player.position.x < 0.0f)
 	{
-		player.position.x = 0.0f + (player.size.x / 2.0f);
+		player.position.x = 0.0f;
 	}
 	else if (player.position.x > screenWidth - (player.size.x / 2.0f))
 	{
@@ -236,6 +239,8 @@ static void Update(Player& player, Ball& ball, Brick bricks[], Brick acidBricks[
 		slSoundPlay(ballStart);
 		player.firstTime = false;
 	}
+
+	deltaTime = Globals::clock.restart();
 
 	UpdatePowerUps(player, bricks, acidBricks);
 

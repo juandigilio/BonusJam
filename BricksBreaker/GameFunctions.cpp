@@ -182,7 +182,7 @@ static void LoadAssets()
 
 	if (!texture.loadFromFile("../Assets/Images/gameBackground.png"))
 	{
-		cout << ">>> MenuBackground texture load failed! <<<" << endl;
+		cout << ">>> Game Background texture load failed! <<<" << endl;
 	}
 	else
 	{
@@ -192,7 +192,7 @@ static void LoadAssets()
 
 	if (!texture.loadFromFile("../Assets/Images/Ship.png"))
 	{
-		cout << ">>> MenuBackground texture load failed! <<<" << endl;
+		cout << ">>> Player texture load failed! <<<" << endl;
 	}
 	else
 	{
@@ -202,7 +202,7 @@ static void LoadAssets()
 
 	if (!texture.loadFromFile("../Assets/Images/ShipEnd.png"))
 	{
-		cout << ">>> MenuBackground texture load failed! <<<" << endl;
+		cout << ">>> Player end texture load failed! <<<" << endl;
 	}
 	else
 	{
@@ -210,25 +210,77 @@ static void LoadAssets()
 		playerEnd.setScale(1.2f, 1.2f);
 	}
 
-	if (!texture.loadFromFile("../Assets/Images/gameBackground.png"))
+	if (!texture.loadFromFile("../Assets/Images/Enemy.png"))
 	{
-		cout << ">>> MenuBackground texture load failed! <<<" << endl;
+		cout << ">>> Ball texture load failed! <<<" << endl;
 	}
 	else
 	{
-		gameBackground.setTexture(texture);
-		gameBackground.setScale(1.2f, 1.2f);
+		ball.setTexture(texture);
+		ball.setScale(1.2f, 1.2f);
 	}
 
+	if (!texture.loadFromFile("../Assets/Images/brick1.png"))
+	{
+		cout << ">>> brik1 texture load failed! <<<" << endl;
+	}
+	else
+	{
+		brick1.setTexture(texture);
+		brick1.setScale(1.2f, 1.2f);
+	}
 
-	ball = slLoadTexture("../Assets/Images/Enemy.png");
+	if (!texture.loadFromFile("../Assets/Images/brick2.png"))
+	{
+		cout << ">>> brik2 texture load failed! <<<" << endl;
+	}
+	else
+	{
+		brick2.setTexture(texture);
+		brick2.setScale(1.2f, 1.2f);
+	}
 
-	brick1 = slLoadTexture("../Assets/Images/brick1.png");
-	brick2 = slLoadTexture("../Assets/Images/brick2.png");
-	brick3 = slLoadTexture("../Assets/Images/brick3.png");
-	brick4 = slLoadTexture("../Assets/Images/brick4.png");
-	brick5 = slLoadTexture("../Assets/Images/brick5.png");
-	acidBrick = slLoadTexture("../Assets/Images/acid.png");
+	if (!texture.loadFromFile("../Assets/Images/brick3.png"))
+	{
+		cout << ">>> brik3 texture load failed! <<<" << endl;
+	}
+	else
+	{
+		brick3.setTexture(texture);
+		brick3.setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/brick4.png"))
+	{
+		cout << ">>> brik4 texture load failed! <<<" << endl;
+	}
+	else
+	{
+		brick4.setTexture(texture);
+		brick4.setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/brick5.png"))
+	{
+		cout << ">>> brik5 texture load failed! <<<" << endl;
+	}
+	else
+	{
+		brick5.setTexture(texture);
+		brick5.setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/acid.png"))
+	{
+		cout << ">>> acidBrick texture load failed! <<<" << endl;
+	}
+	else
+	{
+		acidBrick.setTexture(texture);
+		acidBrick.setScale(1.2f, 1.2f);
+	}
+
+	
 	iceBrick = slLoadTexture("../Assets/Images/ice.png");
 	bigBrick = slLoadTexture("../Assets/Images/big.png");
 	stoneBrick[0] = slLoadTexture("../Assets/Images/stone.png");

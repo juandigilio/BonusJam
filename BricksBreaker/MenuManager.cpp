@@ -13,7 +13,7 @@ using namespace sf;
 using namespace Assets;
 using namespace Globals;
 
-void InitMenu()
+static void InitMenu()
 {
 	Texture texture;
 
@@ -121,10 +121,7 @@ static void Draw()
 
 static void GetInput(GameSceen& currentSceen)
 {
-	//slSetForeColor(1.0f, 0.47f, 0.0f, 1.0f);
-	Event menuEvent;
-
-	Vector2i cursor = Mouse::getPosition();
+	Vector2f cursor = static_cast<Vector2f>(Mouse::getPosition(window));
 
 	if (cursor.x >= acidBrick.getPosition().x &&
 		cursor.x <= acidBrick.getPosition().x + acidBrick.getGlobalBounds().width &&
@@ -135,9 +132,12 @@ static void GetInput(GameSceen& currentSceen)
 		playText.setFillColor(Color::Yellow);
 		window.draw(playText);
 
-		if (Mouse::isButtonPressed(Mouse::Button::Left))
+		if (event.type == Event::MouseButtonPressed)
 		{
-			currentSceen = GameSceen::GAME;
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				currentSceen = GameSceen::GAME;
+			}
 		}
 	}
 	else 
@@ -154,9 +154,12 @@ static void GetInput(GameSceen& currentSceen)
 		exitText.setFillColor(Color::Yellow);
 		window.draw(exitText);
 
-		if (Mouse::isButtonPressed(Mouse::Button::Left))
+		if (event.type == Event::MouseButtonPressed)
 		{
-			currentSceen = GameSceen::EXIT;
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				currentSceen = GameSceen::EXIT;
+			}
 		}
 	}
 	else
@@ -173,9 +176,12 @@ static void GetInput(GameSceen& currentSceen)
 		creditsText.setFillColor(Color::Yellow);
 		window.draw(creditsText);
 
-		if (Mouse::isButtonPressed(Mouse::Button::Left))
+		if (event.type == Event::MouseButtonPressed)
 		{
-			currentSceen = GameSceen::CREDITS;
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				currentSceen = GameSceen::CREDITS;
+			}
 		}
 	}
 	else
@@ -192,9 +198,12 @@ static void GetInput(GameSceen& currentSceen)
 		instructionsText.setFillColor(Color::Yellow);
 		window.draw(instructionsText);
 
-		if (Mouse::isButtonPressed(Mouse::Button::Left))
+		if (event.type == Event::MouseButtonPressed)
 		{
-			currentSceen = GameSceen::INSTRUCTIONS;
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				currentSceen = GameSceen::INSTRUCTIONS;
+			}
 		}
 	}
 	else
@@ -242,7 +251,6 @@ static void ShowInstructions(GameSceen& currentSceen)
 	line5.setFont(menuFont);
 	line5.setCharacterSize(50);
 
-
 	window.draw(menuBackground);
 
 	window.draw(line1);
@@ -251,9 +259,9 @@ static void ShowInstructions(GameSceen& currentSceen)
 	window.draw(line4);
 	window.draw(line5);
 
-	if (event.type == sf::Event::KeyPressed)
+	if (event.type == Event::KeyPressed)
 	{
-		if (event.key.code == sf::Keyboard::Escape)
+		if (event.key.code == Keyboard::Escape)
 		{
 			currentSceen = GameSceen::MENU;
 		}
@@ -271,13 +279,13 @@ static void ShowCredits(GameSceen& currentSceen)
 	line1.setCharacterSize(50);
 
 	Text line2;
-	line2.setString("Juan Ignacio Digilio");
+	line2.setString("Juan Ignacio Digilio && Mateo Viko Monastra");
 	line2.setPosition(center - (line2.getGlobalBounds().width / 2.0f), 40.0f);
 	line2.setFont(menuFont);
 	line2.setCharacterSize(50);
 
 	Text line3;
-	line3.setString("Image Campus student (Sigil evaluation)");
+	line3.setString("Image Campus students (First time with SFML)");
 	line3.setPosition(center - (line3.getGlobalBounds().width / 2.0f), 60.0f);
 	line3.setFont(menuFont);
 	line3.setCharacterSize(50);
@@ -309,41 +317,56 @@ static void ShowCredits(GameSceen& currentSceen)
 	window.draw(line5);
 	window.draw(line6);
 
-	if (slGetKey(SL_KEY_ESCAPE))
-	{
-		currentSceen = GameSceen::MENU;
-	}
-	else if ((slGetMouseX() > itchioPosX - 110 && slGetMouseX() < itchioPosX + 110) &&
-		(slGetMouseY() > itchioPosY && slGetMouseY() < itchioPosY + 14))
-	{
-		slSetForeColor(1.0f, 0.47f, 0.0f, 1.0f);
-		slText(itchioPosX, itchioPosY, "https://juandigilio.itch.io/");
-		slSetForeColor(1.0f, 1.0f, 1.0f, 1.0f);
+	Vector2f cursor = static_cast<Vector2f>(Mouse::getPosition(window));
 
-		if (slGetMouseButton(SL_MOUSE_BUTTON_LEFT))
+	if (event.type == Event::KeyPressed)
+	{
+		if (event.key.code == Keyboard::Escape)
 		{
-			const char* url = "https://juandigilio.itch.io/";
-			char command[256];
-			snprintf(command, sizeof(command), "start %s", url);
-			system(command);
+			currentSceen = GameSceen::MENU;
 		}
-
 	}
-	else if ((slGetMouseX() > gitPosX - 130 && slGetMouseX() < gitPosX + 130) &&
-		(slGetMouseY() > gitPosY && slGetMouseY() < gitPosY + 14))
+
+	if (cursor.x >= line5.getPosition().x &&
+		cursor.x <= line5.getPosition().x + line5.getGlobalBounds().width &&
+		cursor.y >= line5.getPosition().y &&
+		cursor.y <= line5.getPosition().y + line5.getGlobalBounds().height)
 	{
-		slSetForeColor(1.0f, 0.47f, 0.0f, 1.0f);
-		slText(gitPosX, gitPosY, "https://github.com/juandigilio");
-		slSetForeColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-		if (slGetMouseButton(SL_MOUSE_BUTTON_LEFT))
+		line5.setFillColor(Color::Yellow);
+		window.draw(line5);
+
+		if (event.type == Event::MouseButtonPressed)
 		{
-			const char* url = "https://github.com/juandigilio";
-			char command[256];
-			snprintf(command, sizeof(command), "start %s", url);
-			system(command);
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				const char* url = "https://juandigilio.itch.io/";
+				char command[256];
+				snprintf(command, sizeof(command), "start %s", url);
+				system(command);
+			}
 		}
+	}
 
+	if (cursor.x >= line6.getPosition().x &&
+		cursor.x <= line6.getPosition().x + line6.getGlobalBounds().width &&
+		cursor.y >= line6.getPosition().y &&
+		cursor.y <= line6.getPosition().y + line6.getGlobalBounds().height)
+	{
+
+		line6.setFillColor(Color::Yellow);
+		window.draw(line6);
+
+		if (event.type == Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				const char* url = "https://github.com/juandigilio";
+				char command[256];
+				snprintf(command, sizeof(command), "start %s", url);
+				system(command);
+			}
+		}
 	}
 }
 
@@ -397,7 +420,7 @@ void RunGame()
 
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if (event.type == Event::Closed)
 				window.close();
 		}
 	}
