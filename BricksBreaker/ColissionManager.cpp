@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-#include "sl.h"
+#include <SFML/Graphics.hpp>
+
 #include "GameData.h"
 
 

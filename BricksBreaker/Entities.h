@@ -34,10 +34,10 @@ struct Brick
 	int stoneTexturePos;
 	float lastUpdate;
 	float speed;
-	float red;
-	float green;
-	float blue;
-	float alpha;
+	Uint8 red;
+	Uint8 green;
+	Uint8 blue;
+	Uint8 alpha;
 	bool isAlphaDown;
 	bool isAlive;
 	bool isAcid;

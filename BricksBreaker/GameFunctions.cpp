@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include<SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "GameData.h"
 
@@ -13,21 +14,17 @@ using namespace std;
 
 static void SetEntities(Player& player, Ball& ball, Brick bricks[], Brick acidBricks[])
 {
+	gameBackground.setPosition(0.0f, 0.0f);
 
-	player.size = { 100.0f, 100.0f };
-	player.textureSize = { player.size.x , player.size.y };
-	player.position = { screenWidth * 0.5f, -player.size.y / 4.0f };
+	player.texture.setPosition(screenWidth * 0.5f, - player.texture.getGlobalBounds().height / 4.0f);
 	player.availableLives = 3;
 	player.points = 0;
 	player.speed = { 0.0f, 0.0f };
 	player.texture = Assets::player;
 	player.isAlive = true;
 
-
 	ball.radius = 8.0f;
-	ball.textureSize.x = ball.radius * 2;
-	ball.textureSize.y = ball.radius * 2;
-	ball.position = { static_cast<float>(screenWidth / 2.0f), 35.0f };
+	ball.texture.setPosition(static_cast<float>(screenWidth / 2.0f), 35.0f);
 	ball.speed = { 0.0f, 300.0f };
 	ball.maxSpeed = 700.0f;
 	ball.texture = Assets::ball;
@@ -35,8 +32,7 @@ static void SetEntities(Player& player, Ball& ball, Brick bricks[], Brick acidBr
 	ball.isOut = false;
 	ball.isStoped = true;
 
-	
-	Vector2 position = { 90.0f, screenHeight - 50.0f };
+	Vector2f position = { 90.0f, screenHeight - 50.0f };
 	int iterator = 0;
 	float brickSizeX = 80;
 	float brickSizeY = 23;
@@ -51,11 +47,7 @@ static void SetEntities(Player& player, Ball& ball, Brick bricks[], Brick acidBr
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			bricks[activeBricks].size.x = brickSizeX;
-			bricks[activeBricks].size.y = brickSizeY;
-			bricks[activeBricks].textureSize.x = brickSizeX;
-			bricks[activeBricks].textureSize.y = brickSizeY;
-			bricks[activeBricks].position = position;
+			bricks[activeBricks].texture.setPosition(position);
 			bricks[activeBricks].isAlive = true;
 			bricks[activeBricks].isAcid = false;
 			bricks[activeBricks].isIce = false;
@@ -63,7 +55,7 @@ static void SetEntities(Player& player, Ball& ball, Brick bricks[], Brick acidBr
 			bricks[activeBricks].isStone = false;
 			bricks[activeBricks].availableLives = 0;
 
-			position.x += bricks[activeBricks].size.x + 10.0f;
+			position.x += bricks[activeBricks].texture.getGlobalBounds().width + 10.0f;
 
 			ran = (rand() % 5) + 1;
 
@@ -162,10 +154,6 @@ static void SetEntities(Player& player, Ball& ball, Brick bricks[], Brick acidBr
 	{
 		acidBricks[i].texture = acidBrick; 
 		acidBricks[i].isAlive = false;
-		acidBricks[i].size.x = brickSizeX;
-		acidBricks[i].size.y = brickSizeY;
-		acidBricks[i].textureSize.x = brickSizeX;
-		acidBricks[i].textureSize.y = brickSizeY;
 		acidBricks[i].speed = 180.0f;
 		acidBricks[i].red = 1.0f;
 		acidBricks[i].green = 0.0f;
@@ -173,7 +161,6 @@ static void SetEntities(Player& player, Ball& ball, Brick bricks[], Brick acidBr
 		acidBricks[i].alpha = 1.0f;
 		acidBricks[i].isAlphaDown = true;
 	}
-
 }
 
 static void LoadAssets()
@@ -187,7 +174,7 @@ static void LoadAssets()
 	else
 	{
 		gameBackground.setTexture(texture);
-		gameBackground.setScale(1.2f, 1.2f);
+		gameBackground.setScale(1.5f, 1.5f);
 	}
 
 	if (!texture.loadFromFile("../Assets/Images/Ship.png"))
@@ -280,22 +267,140 @@ static void LoadAssets()
 		acidBrick.setScale(1.2f, 1.2f);
 	}
 
-	
-	iceBrick = slLoadTexture("../Assets/Images/ice.png");
-	bigBrick = slLoadTexture("../Assets/Images/big.png");
-	stoneBrick[0] = slLoadTexture("../Assets/Images/stone.png");
-	stoneBrick[1] = slLoadTexture("../Assets/Images/stone1.png");
-	stoneBrick[2] = slLoadTexture("../Assets/Images/stone2.png");
-	stoneBrick[3] = slLoadTexture("../Assets/Images/stone3.png");
-	stoneBrick[4] = slLoadTexture("../Assets/Images/stone4.png");
+	if (!texture.loadFromFile("../Assets/Images/ice.png"))
+	{
+		cout << ">>> iceBrick texture load failed! <<<" << endl;
+	}
+	else
+	{
+		iceBrick.setTexture(texture);
+		iceBrick.setScale(1.2f, 1.2f);
+	}
 
-	ballBrick = slLoadWAV("../Assets/Music/ballBrick.wav");
-	ballStart = slLoadWAV("../Assets/Music/ballStart.wav");
-	ballWall = slLoadWAV("../Assets/Music/ballWall.wav");
-	missBall = slLoadWAV("../Assets/Music/missBall.wav");
-	iced = slLoadWAV("../Assets/Music/iced.wav");
-	danger = slLoadWAV("../Assets/Music/danger.wav");
-	bigPlayer = slLoadWAV("../Assets/Music/bigPlayer.wav");
+	if (!texture.loadFromFile("../Assets/Images/big.png"))
+	{
+		cout << ">>> bigBrick texture load failed! <<<" << endl;
+	}
+	else
+	{
+		bigBrick.setTexture(texture);
+		bigBrick.setScale(1.2f, 1.2f);
+	}
+	
+	if (!texture.loadFromFile("../Assets/Images/stone.png"))
+	{
+		cout << ">>> stoneBrick[0] texture load failed! <<<" << endl;
+	}
+	else
+	{
+		stoneBrick[0].setTexture(texture);
+		stoneBrick[0].setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/stone1.png"))
+	{
+		cout << ">>> stoneBrick[1] texture load failed! <<<" << endl;
+	}
+	else
+	{
+		stoneBrick[1].setTexture(texture);
+		stoneBrick[1].setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/stone2.png"))
+	{
+		cout << ">>> stoneBrick[2] texture load failed! <<<" << endl;
+	}
+	else
+	{
+		stoneBrick[2].setTexture(texture);
+		stoneBrick[2].setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/stone3.png"))
+	{
+		cout << ">>> stoneBrick[3] texture load failed! <<<" << endl;
+	}
+	else
+	{
+		stoneBrick[3].setTexture(texture);
+		stoneBrick[3].setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/stone4.png"))
+	{
+		cout << ">>> stoneBrick[4] texture load failed! <<<" << endl;
+	}
+	else
+	{
+		stoneBrick[4].setTexture(texture);
+		stoneBrick[4].setScale(1.2f, 1.2f);
+	}
+
+	SoundBuffer buffer;
+
+	if (!buffer.loadFromFile("../Assets/Music/ballBrick.wav")) 
+	{
+		cout << ">>> ballBrick.wav sound load failed! <<<" << endl;
+	}
+	else
+	{
+		ballBrick.setBuffer(buffer);
+	}
+
+	if (!buffer.loadFromFile("../Assets/Music/ballStart.wav"))
+	{
+		cout << ">>> ballStart.wav sound load failed! <<<" << endl;
+	}
+	else
+	{
+		ballStart.setBuffer(buffer);
+	}
+
+	if (!buffer.loadFromFile("../Assets/Music/ballWall.wav"))
+	{
+		cout << ">>> ballWall.wav sound load failed! <<<" << endl;
+	}
+	else
+	{
+		ballWall.setBuffer(buffer);
+	}
+
+	if (!buffer.loadFromFile("../Assets/Music/missBall.wav"))
+	{
+		cout << ">>> missBall.wav sound load failed! <<<" << endl;
+	}
+	else
+	{
+		missBall.setBuffer(buffer);
+	}
+	
+	if (!buffer.loadFromFile("../Assets/Music/iced.wav"))
+	{
+		cout << ">>> iced.wav sound load failed! <<<" << endl;
+	}
+	else
+	{
+		iced.setBuffer(buffer);
+	}
+	
+	if (!buffer.loadFromFile("../Assets/Music/danger.wav"))
+	{
+		cout << ">>> danger.wav sound load failed! <<<" << endl;
+	}
+	else
+	{
+		danger.setBuffer(buffer);
+	}
+
+	if (!buffer.loadFromFile("../Assets/Music/bigPlayer.wav"))
+	{
+		cout << ">>> bigPlayer.wav sound load failed! <<<" << endl;
+	}
+	else
+	{
+		bigPlayer.setBuffer(buffer);
+	}
 }
 
 void InitGame(Player& player, Ball& ball, Brick bricks[], Brick acidBricks[])

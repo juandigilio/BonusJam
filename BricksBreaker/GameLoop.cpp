@@ -31,7 +31,7 @@ static void GetInput(Player& player, Ball& ball, Brick bricks[], GameSceen& curr
 		}
 		else if (event.key.code == Keyboard::RControl && ball.isStoped)
 		{
-			//slSoundPlay(ballStart);
+			ballStart.play();
 			ball.isStoped = false;
 			ball.speed.x = 0.0f;
 			ball.speed.y = 700.0f;
@@ -45,48 +45,57 @@ static void GetInput(Player& player, Ball& ball, Brick bricks[], GameSceen& curr
 
 static void MoveEntities(Player& player, Ball& ball)
 {
-	player.position.x += player.speed.x * deltaTime;
-	player.position.y += player.speed.y * deltaTime;
+	Vector2f newPos;
+	newPos.x = player.texture.getPosition().x + (player.speed.x * deltaTime.asMilliseconds());
+	newPos.y = player.texture.getPosition().y + (player.speed.y * deltaTime.asMilliseconds());
 
-	if (player.position.x < 0.0f)
+
+	if (newPos.x < 0.0f)
 	{
-		player.position.x = 0.0f;
+		newPos.x = 0.0f;
 	}
-	else if (player.position.x > screenWidth - (player.size.x / 2.0f))
+	else if (newPos.x > screenWidth - (player.texture.getGlobalBounds().width))
 	{
-		player.position.x = screenWidth - (player.size.x / 2.0f);
+		newPos.x = screenWidth - (player.texture.getGlobalBounds().width);
 	}
+
+	player.texture.setPosition(newPos);
 
 	if (ball.isStoped)
 	{
-		ball.position.x = player.position.x;
+		ball.texture.setPosition(player.texture.getPosition().x, ball.texture.getPosition().y);
 	}
 	else
 	{
-		ball.position.x += ball.speed.x * static_cast<float>(slGetDeltaTime());
-		ball.position.y += ball.speed.y * static_cast<float>(slGetDeltaTime());
+		newPos.x = ball.texture.getPosition().x + ball.speed.x * deltaTime.asMilliseconds();
+		newPos.y = ball.texture.getPosition().y + ball.speed.y * deltaTime.asMilliseconds();
+
+		ball.texture.setPosition(newPos);
 	}
 }
 
 static void DrawHUD(Player& player)
 {
-	slSetFont(menuFont, 20);
-
 	char numeroText[32];
 	snprintf(numeroText, sizeof(numeroText), "Points: %d", player.points);
-	slText(80, 10, numeroText);
+
+	Text line1;
+	line1.setString(numeroText);
+	line1.setPosition(screenWidth / 2.0f - line1.getGlobalBounds().width / 2.0f, static_cast<double>(150));
+	line1.setFont(menuFont);
+	line1.setCharacterSize(80);
 
 }
 
 static void Draw(Player& player, Ball& ball, Brick bricks[], Brick acidBricks[])
 {
-	slSprite(gameBackground, static_cast<double>(screenWidth / 2), static_cast<double>(screenHeight / 2), static_cast<double>(screenWidth * 1.8f), static_cast<double>(screenHeight * 1.5f));
+	window.draw(gameBackground);
 
 	for (int i = 0; i < bricksQnty; i++)
 	{
 		if (bricks[i].isAlive)
 		{
-			slSprite(bricks[i].texture, bricks[i].position.x, bricks[i].position.y, bricks[i].textureSize.x, bricks[i].textureSize.y);
+			window.draw(bricks[i].texture);
 		}
 	}
 
@@ -94,17 +103,16 @@ static void Draw(Player& player, Ball& ball, Brick bricks[], Brick acidBricks[])
 	{
 		if (acidBricks[i].isAlive)
 		{
-			slSetForeColor(acidBricks[i].red, acidBricks[i].green, acidBricks[i].blue, acidBricks[i].alpha);
+			Color color{ acidBricks[i].red, acidBricks[i].green, acidBricks[i].blue, acidBricks[i].alpha };
 
-			slSprite(acidBricks[i].texture, acidBricks[i].position.x, acidBricks[i].position.y, acidBricks[i].size.x, acidBricks[i].size.y);
+			acidBricks[i].texture.setColor(color);
 
-			slSetForeColor(1.0f, 1.0f, 1.0f, 1.0f);
+			window.draw(acidBricks[i].texture);
 		}	
 	}
 
-	slSprite(ball.texture, ball.position.x, ball.position.y, ball.textureSize.x, ball.textureSize.y);
-	slSprite(player.texture, player.position.x, player.position.y, player.textureSize.x, player.textureSize.y);
-	slSprite(player.texture, player.position.x, player.position.y, player.textureSize.x, player.textureSize.y);
+	window.draw(ball.texture);
+	window.draw(player.texture);
 
 	DrawHUD(player);
 }
@@ -126,11 +134,11 @@ static void UpdateAcid(Player& player, Brick bricks[], Brick acidBricks[])
 {
 	if (acidGame)
 	{
-		int elapsedTimeFromLast = slGetTime() - acidLastDrop;
+		int elapsedTimeFromLast = Globals::clock.getElapsedTime().asMilliseconds() - acidLastDrop;
 
-		if (elapsedTimeFromLast > 1 && droppedAcids < totalAcids)
+		if (elapsedTimeFromLast > 1000 && droppedAcids < totalAcids)
 		{
-			acidLastDrop = slGetTime();
+			acidLastDrop = Globals::clock.getElapsedTime().asMilliseconds();
 
 			int random = rand() % bricksQnty;
 
@@ -146,30 +154,34 @@ static void UpdateAcid(Player& player, Brick bricks[], Brick acidBricks[])
 			{
 				if (acidBricks[i].isAlphaDown)
 				{
-					acidBricks[i].red -= 0.05f;
-					acidBricks[i].green += 0.05f;
-					acidBricks[i].blue += 0.05f;
-					acidBricks[i].alpha -= 0.05f;
+					acidBricks[i].red -= 1;
+					acidBricks[i].green += 1;
+					acidBricks[i].blue += 1;
+					acidBricks[i].alpha -= 1;
 
-					if (acidBricks[i].alpha <= 0.4f)
+					if (acidBricks[i].alpha <= 80)
 					{
 						acidBricks[i].isAlphaDown = false;
 					}
 				}
 				else
 				{
-					acidBricks[i].red += 0.05f;
-					acidBricks[i].green -= 0.05f;
-					acidBricks[i].blue -= 0.05f;
-					acidBricks[i].alpha += 0.05f;
+					acidBricks[i].red += 1;
+					acidBricks[i].green -= 1;
+					acidBricks[i].blue -= 1;
+					acidBricks[i].alpha += 1;
 
-					if (acidBricks[i].alpha >= 1.0f)
+					if (acidBricks[i].alpha >= 255)
 					{
 						acidBricks[i].isAlphaDown = true;
 					}
 				}
 
-				acidBricks[i].position.y -= acidBricks[i].speed * slGetDeltaTime();
+				Vector2f newPos;
+				newPos.x = acidBricks[i].texture.getPosition().x;
+				newPos.y = acidBricks[i].texture.getPosition().y + acidBricks[i].speed * deltaTime.asMilliseconds();
+
+				acidBricks[i].texture.setPosition(newPos);
 			}
 		}
 
@@ -178,7 +190,7 @@ static void UpdateAcid(Player& player, Brick bricks[], Brick acidBricks[])
 			if (!StillAcidsAlive(acidBricks))
 			{
 				acidGame = false;
-				slSoundStopAll();
+				//slSoundStopAll();
 			}
 		}
 	}
@@ -188,9 +200,9 @@ static void UpdateIced()
 {
 	if (icedGame)
 	{
-		float elapsedTime = static_cast<float>(slGetTime()) - icedStartPoint;
+		int elapsedTime = Globals::clock.getElapsedTime().asMilliseconds() - icedStartPoint;
 
-		if (elapsedTime > 15.0f)
+		if (elapsedTime > 10000)
 		{
 			icedGame = false;
 		}
@@ -203,9 +215,9 @@ static void UpadteStoned(Brick bricks[])
 	{
 		if (bricks[i].isStone && bricks[i].availableLives == 1)
 		{
-			float elapsedTime = slGetTime() - bricks[i].lastUpdate;
+			int elapsedTime = Globals::clock.getElapsedTime().asMilliseconds() - bricks[i].lastUpdate;
 
-			if (elapsedTime > 0.2f)
+			if (elapsedTime > 100)
 			{
 				bricks[i].stoneTexturePos++;
 
@@ -216,11 +228,10 @@ static void UpadteStoned(Brick bricks[])
 
 				bricks[i].texture = stoneBrick[bricks[i].stoneTexturePos];
 
-				bricks[i].lastUpdate = slGetTime();
+				bricks[i].lastUpdate = Globals::clock.getElapsedTime().asMilliseconds();
 			}
 		}
 	}
-
 }
 
 static void UpdatePowerUps(Player& player, Brick bricks[], Brick acidBricks[])
@@ -236,7 +247,7 @@ static void Update(Player& player, Ball& ball, Brick bricks[], Brick acidBricks[
 {
 	if (player.firstTime)
 	{
-		slSoundPlay(ballStart);
+		ballStart.play();
 		player.firstTime = false;
 	}
 
