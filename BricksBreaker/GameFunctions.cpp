@@ -2,16 +2,18 @@
 
 #include <iostream>
 
-#include"sl.h"
+#include<SFML/Graphics.hpp>
 
 #include "GameData.h"
 
 
 using namespace Assets;
 using namespace Globals;
+using namespace std;
 
 static void SetEntities(Player& player, Ball& ball, Brick bricks[], Brick acidBricks[])
 {
+
 	player.size = { 100.0f, 100.0f };
 	player.textureSize = { player.size.x , player.size.y };
 	player.position = { screenWidth * 0.5f, -player.size.y / 4.0f };
@@ -176,18 +178,49 @@ static void SetEntities(Player& player, Ball& ball, Brick bricks[], Brick acidBr
 
 static void LoadAssets()
 {
-	ballBrick = slLoadWAV("../Assets/Music/ballBrick.wav");
-	ballStart = slLoadWAV("../Assets/Music/ballStart.wav");
-	ballWall = slLoadWAV("../Assets/Music/ballWall.wav");
-	missBall = slLoadWAV("../Assets/Music/missBall.wav");
-	iced = slLoadWAV("../Assets/Music/iced.wav");
-	danger = slLoadWAV("../Assets/Music/danger.wav");
-	bigPlayer = slLoadWAV("../Assets/Music/bigPlayer.wav");
-	
-	
-	gameBackground = slLoadTexture("../Assets/Images/gameBackground.png");
-	player = slLoadTexture("../Assets/Images/Ship.png");
-	playerEnd = slLoadTexture("../Assets/Images/ShipEnd.png");
+	Texture texture;
+
+	if (!texture.loadFromFile("../Assets/Images/gameBackground.png"))
+	{
+		cout << ">>> MenuBackground texture load failed! <<<" << endl;
+	}
+	else
+	{
+		gameBackground.setTexture(texture);
+		gameBackground.setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/Ship.png"))
+	{
+		cout << ">>> MenuBackground texture load failed! <<<" << endl;
+	}
+	else
+	{
+		player.setTexture(texture);
+		player.setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/ShipEnd.png"))
+	{
+		cout << ">>> MenuBackground texture load failed! <<<" << endl;
+	}
+	else
+	{
+		playerEnd.setTexture(texture);
+		playerEnd.setScale(1.2f, 1.2f);
+	}
+
+	if (!texture.loadFromFile("../Assets/Images/gameBackground.png"))
+	{
+		cout << ">>> MenuBackground texture load failed! <<<" << endl;
+	}
+	else
+	{
+		gameBackground.setTexture(texture);
+		gameBackground.setScale(1.2f, 1.2f);
+	}
+
+
 	ball = slLoadTexture("../Assets/Images/Enemy.png");
 
 	brick1 = slLoadTexture("../Assets/Images/brick1.png");
@@ -203,6 +236,14 @@ static void LoadAssets()
 	stoneBrick[2] = slLoadTexture("../Assets/Images/stone2.png");
 	stoneBrick[3] = slLoadTexture("../Assets/Images/stone3.png");
 	stoneBrick[4] = slLoadTexture("../Assets/Images/stone4.png");
+
+	ballBrick = slLoadWAV("../Assets/Music/ballBrick.wav");
+	ballStart = slLoadWAV("../Assets/Music/ballStart.wav");
+	ballWall = slLoadWAV("../Assets/Music/ballWall.wav");
+	missBall = slLoadWAV("../Assets/Music/missBall.wav");
+	iced = slLoadWAV("../Assets/Music/iced.wav");
+	danger = slLoadWAV("../Assets/Music/danger.wav");
+	bigPlayer = slLoadWAV("../Assets/Music/bigPlayer.wav");
 }
 
 void InitGame(Player& player, Ball& ball, Brick bricks[], Brick acidBricks[])
