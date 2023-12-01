@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "GameData.h"
 
@@ -46,47 +47,52 @@ static void RandPowerUp(Brick& brick)
 
 static void CheckWalls(Player& player, Ball& ball, Brick acidBricks[])
 {
-	if (ball.position.x + ball.radius > screenWidth)
+	float ballRadius = ball.texture.getGlobalBounds().width / 2.0f;
+	float ballX = ball.texture.getPosition().x;
+	float ballY = ball.texture.getPosition().y;
+
+	if (ballX + ballRadius * 2.0f > screenWidth)
 	{
 		ball.speed.x = (ball.speed.x * -1.0f);
-		ball.position.x = (screenWidth - ball.radius);
-		slSoundPlay(ballWall);
+		ball.texture.setPosition(screenWidth - ballRadius, ballY);
+		ballWall.play();
 	}
-	else if (ball.position.x - ball.radius < 0.0f)
+	else if (ballX - ballRadius < 0.0f)
 	{
 		ball.speed.x = (ball.speed.x * -1.0f);
-		ball.position.x = ball.radius;
-		slSoundPlay(ballWall);
+		ball.texture.setPosition(ballRadius, ballY);
+		ballWall.play();
 	}
-	else if (ball.position.y + ball.radius > screenHeight)
+	else if (ballY < 0.0f)
 	{
 		ball.speed.y = ball.speed.y * -1.0f;
-		ball.position.y = screenHeight - ball.radius;
-		slSoundPlay(ballWall);
+		ball.texture.setPosition(ballX, 0.0f);
+		ballWall.play();
 	}
-	else if (ball.position.y < 0 && !ball.isOut)
+	else if (ballY < 0 && !ball.isOut)
 	{
 		ball.isOut = true;
 		player.availableLives--;
-		slSoundPlay(missBall);
+		ballWall.play();
 
 		if (player.availableLives == 0)
 		{
 			player.isAlive = false;
-			slSoundStopAll();
+			//slSoundStopAll();
 		}
 	}
-	else if (ball.position.y < -200)
+	else if (ballY > screenHeight + 200)
 	{
 		if (!ball.isStoped)
 		{
-			slSoundPlay(ballStart);
+			ballStart.play();
 		}
 
-		player.textureSize.x = player.size.x;
+		float newY = player.texture.getPosition().y + ballRadius + (player.texture.getGlobalBounds().height / 2.0f) + 10.0f;
+
+		player.texture.setScale(1.0f, 1.0f);
 		ball.isOut = false;
-		ball.position.x = player.position.x;
-		ball.position.y = player.position.y + ball.radius + (player.size.y / 2) + 10;
+		ball.texture.setPosition(player.texture.getPosition().x, newY);
 		ball.speed.y *= 0.0f;
 		ball.speed.x = 0.0f;
 		ball.isStoped = true;
@@ -94,32 +100,41 @@ static void CheckWalls(Player& player, Ball& ball, Brick acidBricks[])
 		icedGame = false;
 
 		KillAcids(acidBricks);
-		slSoundStopAll();	
+		//slSoundStopAll();	
 	}
 }
 
 static void CheckPlayer(Player& player, Ball& ball, bool& collides)
 {
+	float playerWidth = player.texture.getGlobalBounds().width;
+	float playerHeight = player.texture.getGlobalBounds().height;
+	float playerX = player.texture.getPosition().x;
+	float playerY = player.texture.getPosition().y;
+
+	float ballRadius = ball.texture.getGlobalBounds().width / 2.0f;
+	float ballX = ball.texture.getPosition().x;
+	float ballY = ball.texture.getPosition().y;
+
 	pointsQnty = 100;
 	dyP1 = 0;
-	dxP1 = player.textureSize.x / (float)pointsQnty;
+	dxP1 = playerWidth / (float)pointsQnty;
 
 
 	for (int i = 0; i <= pointsQnty; ++i)
 	{
-		y = player.position.y + (player.textureSize.y / 2) + i * dyP1;
-		x = player.position.x - (player.textureSize.x / 2) + i * dxP1;
+		y = playerY + (playerHeight / 2.0f) + i * dyP1;
+		x = playerX - (playerWidth / 2.0f) + i * dxP1;
 
-		hickX = abs(x - ball.position.x);
-		hickY = abs(y - ball.position.y);
+		hickX = abs(x - ballX);
+		hickY = abs(y - ballY);
 
 		hypotenuse = sqrt((hickY * hickY) + (hickX * hickX));
 
-		if (hypotenuse <= ball.radius)
+		if (hypotenuse <= ballRadius)
 		{
 			collides = true;
 
-			ball.position.y = (player.position.y + (player.textureSize.y / 2) + ball.radius) + 10;
+			ballY = (playerY + (playerHeight / 2.0f) + ballRadius) + 10.0f;
 
 			if (icedGame)
 			{
@@ -160,21 +175,30 @@ static void CheckPlayer(Player& player, Ball& ball, bool& collides)
 
 static void CheckBricks(Player& player, Ball& ball, Brick& brick, bool& collides)
 {
+	float ballRadius = ball.texture.getGlobalBounds().width / 2.0f;
+	float ballX = ball.texture.getPosition().x;
+	float ballY = ball.texture.getPosition().y;
+
+	float brickWidth = brick.texture.getGlobalBounds().width;
+	float brickHeight = brick.texture.getGlobalBounds().height;
+	float brickX = brick.texture.getPosition().x;
+	float brickY = brick.texture.getPosition().y;
+
 	pointsQnty = 100;
 	dyP1 = 0;
-	dxP1 = brick.size.x / (float)pointsQnty;
+	dxP1 = brickWidth / static_cast<float>(pointsQnty);
 
 	for (int i = 0; i <= pointsQnty; ++i)
 	{
-		y = brick.position.y - (brick.size.y / 2) + i * dyP1;
-		x = brick.position.x - (brick.size.x / 2) + i * dxP1;
+		y = brickY - (brickHeight / 2) + i * dyP1;
+		x = brickX - (brickWidth / 2) + i * dxP1;
 
-		hickX = abs(x - ball.position.x);
-		hickY = abs(y - ball.position.y);
+		hickX = abs(x - ballX);
+		hickY = abs(y - ballY);
 
 		hypotenuse = sqrt((hickY * hickY) + (hickX * hickX));
 
-		if (hypotenuse <= ball.radius)
+		if (hypotenuse <= ballRadius)
 		{
 			ball.speed.y *= - 1.0f;
 
@@ -186,7 +210,7 @@ static void CheckBricks(Player& player, Ball& ball, Brick& brick, bool& collides
 			
 
 			collides = true;
-			ball.position.y = brick.position.y - (brick.size.y / 2) - ball.radius;
+			ballY = brickY - (brickHeight / 2.0f) - ballRadius;
 
 
 			if (i < 10)
@@ -223,20 +247,20 @@ static void CheckBricks(Player& player, Ball& ball, Brick& brick, bool& collides
 	{
 		for (int i = 0; i <= pointsQnty; ++i)
 		{
-			y = brick.position.y + (brick.size.y / 2) + i * dyP1;
-			x = brick.position.x - (brick.size.x / 2) + i * dxP1;
+			y = brickY + (brickHeight / 2.0f) + i * dyP1;
+			x = brickX - (brickWidth / 2.0f) + i * dxP1;
 
-			hickX = abs(x - ball.position.x);
-			hickY = abs(y - ball.position.y);
+			hickX = abs(x - ballX);
+			hickY = abs(y - ballY);
 
 			hypotenuse = sqrt((hickY * hickY) + (hickX * hickX));
 
-			if (hypotenuse <= ball.radius)
+			if (hypotenuse <= ballRadius)
 			{
 				ball.speed.y *= -1.0f;
 				ball.speed.x *= -1.0f;
 				collides = true;
-				ball.position.y = brick.position.y + (brick.size.y / 2) + ball.radius;
+				ballY = brickY + (brickHeight / 2) + ballRadius;
 
 				if (!brick.isStone)
 				{
@@ -278,25 +302,25 @@ static void CheckBricks(Player& player, Ball& ball, Brick& brick, bool& collides
 
 	if (!collides)
 	{
-		dyP1 = brick.size.y / (float)pointsQnty;
+		dyP1 = brickHeight / (float)pointsQnty;
 		dxP1 = 0;
 
 		for (int i = 0; i <= pointsQnty; ++i)
 		{
-			y = brick.position.y - (brick.size.y / 2) + i * dyP1;
-			x = brick.position.x - (brick.size.x / 2) + i * dxP1;
+			y = brickY - (brickHeight / 2.0f) + i * dyP1;
+			x = brickX - (brickWidth / 2.0f) + i * dxP1;
 
-			hickX = abs(x - ball.position.x);
-			hickY = abs(y - ball.position.y);
+			hickX = abs(x - ballX);
+			hickY = abs(y - ballY);
 
 			hypotenuse = sqrt((hickY * hickY) + (hickX * hickX));
 
-			if (hypotenuse <= ball.radius)
+			if (hypotenuse <= ballRadius)
 			{
 				ball.speed.x *= -1.0f;
 				ball.speed.y = abs(ball.speed.y) * -1.0f;
 				collides = true;
-				ball.position.x = brick.position.x - (brick.size.x / 2) - ball.radius;
+				ballX = brickX - (brickWidth / 2.0f) - ballRadius;
 
 				if (!brick.isStone)
 				{
@@ -317,20 +341,20 @@ static void CheckBricks(Player& player, Ball& ball, Brick& brick, bool& collides
 	{
 		for (int i = 0; i <= pointsQnty; ++i)
 		{
-			y = brick.position.y - (brick.size.y / 2) + i * dyP1;
-			x = brick.position.x + (brick.size.x / 2) + i * dxP1;
+			y = brickY - (brickHeight / 2.0f) + i * dyP1;
+			x = brickX + (brickWidth / 2.0f) + i * dxP1;
 
-			hickX = abs(x - ball.position.x);
-			hickY = abs(y - ball.position.y);
+			hickX = abs(x - ballX);
+			hickY = abs(y - ballY);
 
 			hypotenuse = sqrt((hickY * hickY) + (hickX * hickX));
 
-			if (hypotenuse <= ball.radius)
+			if (hypotenuse <= ballRadius)
 			{
 				ball.speed.x *= -1.0f;
 				ball.speed.y = abs(ball.speed.y) * -1.0f;
 				collides = true;
-				ball.position.x = brick.position.x + (brick.size.x / 2) + ball.radius;
+				ballX = brickX + (brickWidth / 2.0f) + ballRadius;
 
 				if (!brick.isStone)
 				{
@@ -349,24 +373,24 @@ static void CheckPowerUps(Player& player, Brick& brick)
 {
 	if (brick.isAcid)
 	{
-		slSoundLoop(danger);
+		danger.play();
 		droppedAcids = 0;
 		acidGame = true;
 	}
 	else if (brick.isIce)
 	{
-		slSoundPlay(iced);
-		icedStartPoint = slGetTime();
+		iced.play();
+		icedStartPoint = Globals::clock.getElapsedTime().asMilliseconds();
 		icedGame = true;
 	}
 	else if (brick.isBig)
 	{
-		slSoundPlay(bigPlayer);
-		player.textureSize.x = player.size.x * 2;
+		bigPlayer.play();
+		player.texture.setScale(1.0f, 1.0f);
 	}
 	else if (brick.isStone)
 	{
-		slSoundPlay(ballWall);
+		ballWall.play();
 
 		brick.availableLives--;
 
@@ -379,33 +403,43 @@ static void CheckPowerUps(Player& player, Brick& brick)
 	}
 	else
 	{
-		slSoundPlay(ballBrick);
+		ballBrick.play();
 	}
 }
 
 static void CheckAcids(Player& player, Brick acidBricks[], Ball& ball)
 {
+	float playerWidth = player.texture.getGlobalBounds().width;
+	float playerHeight = player.texture.getGlobalBounds().height;
+	float playerX = player.texture.getPosition().x;
+	float playerY = player.texture.getPosition().y;
+
 	for (int i = 0; i < totalAcids; i++)
 	{
+		float brickX = acidBricks[i].texture.getPosition().x;
+		float brickY = acidBricks[i].texture.getPosition().y;
+		float brickWidth = acidBricks[i].texture.getGlobalBounds().width;
+		float brickHeight = acidBricks[i].texture.getGlobalBounds().height;
+
 		if (acidBricks[i].isAlive)
 		{
 			bool collidesX = false;
 			bool collidesY = false;
 
-			Vector2 vertex[4];
-			vertex[0] = { player.position.x - (player.textureSize.x / 2), player.position.y - (player.textureSize.y / 2) };
-			vertex[1] = { player.position.x + (player.textureSize.x / 2), player.position.y - (player.textureSize.y / 2) };
-			vertex[2] = { player.position.x - (player.textureSize.x / 2), player.position.y + (player.textureSize.y / 2) };
-			vertex[3] = { player.position.x + (player.textureSize.x / 2), player.position.y + (player.textureSize.y / 2) };
+			Vector2f vertex[4];
+			vertex[0] = { playerX - (playerWidth / 2.0f), playerWidth - (playerHeight / 2.0f) };
+			vertex[1] = { playerX + (playerWidth / 2.0f), playerWidth - (playerHeight / 2.0f) };
+			vertex[2] = { playerX - (playerWidth / 2.0f), playerWidth + (playerHeight / 2.0f) };
+			vertex[3] = { playerX + (playerWidth / 2.0f), playerWidth + (playerHeight / 2.0f) };
 			
 			for (int j = 0; j < 4; j++)
 			{
-				if (vertex[j].x > (acidBricks[i].position.x - acidBricks[i].textureSize.x / 2) && vertex[j].x < (acidBricks[i].position.x + acidBricks[i].textureSize.x / 2))
+				if (vertex[j].x > (brickX - brickWidth / 2.0f) && vertex[j].x < (brickX + brickWidth / 2.0f))
 				{
 					collidesX = true;
 				}
 
-				if (vertex[j].y > (acidBricks[i].position.y - acidBricks[i].textureSize.y / 2) && vertex[j].y < (acidBricks[i].position.y + acidBricks[i].textureSize.y / 2))
+				if (vertex[j].y > (brickY - brickHeight / 2.0f) && vertex[j].y < (brickY + brickHeight / 2.0f))
 				{
 					collidesY = true;
 				}
@@ -419,8 +453,8 @@ static void CheckAcids(Player& player, Brick acidBricks[], Ball& ball)
 			if (collidesX && collidesY)
 			{
 				player.availableLives--;
-				slSoundStopAll();
-				slSoundPlay(missBall);
+				//slSoundStopAll();
+				missBall.play();
 
 				if (player.availableLives == 0)
 				{
@@ -428,9 +462,10 @@ static void CheckAcids(Player& player, Brick acidBricks[], Ball& ball)
 				}
 				else
 				{
-					player.textureSize.x = player.size.x;
-					ball.position.x = player.position.x;
-					ball.position.y = player.position.y + ball.radius + (player.size.y / 2);
+					float ballRadius = ball.texture.getGlobalBounds().width / 2.0f;
+
+					player.texture.setScale(1.0f, 1.0f);
+					ball.texture.setPosition(playerX, playerY + ballRadius + (playerHeight / 2.0f));
 					ball.speed.y *= 0.0f;
 					ball.speed.x = 0.0f;
 					ball.isStoped = true;
@@ -439,13 +474,13 @@ static void CheckAcids(Player& player, Brick acidBricks[], Ball& ball)
 
 					KillAcids(acidBricks);
 
-					slSoundStopAll();
-					slSoundPlay(ballStart);
+					//slSoundStopAll();
+					ballStart.play();
 				}
 
 				break;
 			}
-			else if (acidBricks[i].position.y < -10.0f)
+			else if (brickY < -10.0f)
 			{
 				player.points += 200;
 				acidBricks[i].isAlive = false;

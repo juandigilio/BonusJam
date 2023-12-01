@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "GameFunctions.h"
 #include "ColissionManager.h"
@@ -143,7 +144,7 @@ static void UpdateAcid(Player& player, Brick bricks[], Brick acidBricks[])
 			int random = rand() % bricksQnty;
 
 			acidBricks[droppedAcids].isAlive = true;
-			acidBricks[droppedAcids].position = bricks[random].position;
+			acidBricks[droppedAcids].texture.setPosition(bricks[random].texture.getPosition());
 
 			droppedAcids++;
 		}

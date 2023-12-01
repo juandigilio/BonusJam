@@ -23,7 +23,6 @@ static void SetEntities(Player& player, Ball& ball, Brick bricks[], Brick acidBr
 	player.texture = Assets::player;
 	player.isAlive = true;
 
-	ball.radius = 8.0f;
 	ball.texture.setPosition(static_cast<float>(screenWidth / 2.0f), 35.0f);
 	ball.speed = { 0.0f, 300.0f };
 	ball.maxSpeed = 700.0f;

@@ -19,7 +19,6 @@ struct Ball
 {
 	Sprite texture;
 	Vector2f speed;
-	float radius;
 	float maxSpeed;
 	bool isAlive;
 	bool isOut;
@@ -29,7 +28,6 @@ struct Ball
 struct Brick
 {
 	Sprite texture;
-	Vector2f position;
 	int availableLives;
 	int stoneTexturePos;
 	float lastUpdate;
