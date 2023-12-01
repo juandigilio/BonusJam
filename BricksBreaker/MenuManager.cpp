@@ -302,7 +302,6 @@ static void ShowCredits(GameSceen& currentSceen)
 	line4.setFont(menuFont);
 	line4.setCharacterSize(50);
 
-
 	Text line5;
 	line5.setString("Image Campus students (First time with SFML)");
 	line5.setPosition(center - (line3.getGlobalBounds().width / 2.0f), 100.0f);
@@ -327,6 +326,18 @@ static void ShowCredits(GameSceen& currentSceen)
 	line8.setFont(menuFont);
 	line8.setCharacterSize(50);
 
+	Text line9;
+	line9.setString("https://mateo-monastra.itch.io/");
+	line9.setPosition(center - (line6.getGlobalBounds().width / 2.0f), 180.0f);
+	line9.setFont(menuFont);
+	line9.setCharacterSize(50);
+
+	Text line10;
+	line10.setString("https://github.com/MateoMonastra");
+	line10.setPosition(center - (line6.getGlobalBounds().width / 2.0f), 200.0f);
+	line10.setFont(menuFont);
+	line10.setCharacterSize(50);
+
 
 	window.draw(menuBackground);
 	window.draw(line1);
@@ -337,6 +348,8 @@ static void ShowCredits(GameSceen& currentSceen)
 	window.draw(line6);
 	window.draw(line7);
 	window.draw(line8);
+	window.draw(line9);
+	window.draw(line10);
 
 	if (event.type == Event::KeyPressed)
 	{
@@ -346,7 +359,7 @@ static void ShowCredits(GameSceen& currentSceen)
 		}
 	}
 
-	if (TextMouseCollition(line5))
+	if (TextMouseCollition(line7))
 	{
 
 		line5.setFillColor(Color::Yellow);
@@ -364,7 +377,7 @@ static void ShowCredits(GameSceen& currentSceen)
 		}
 	}
 
-	if (TextMouseCollition(line6))
+	if (TextMouseCollition(line8))
 	{
 
 		line6.setFillColor(Color::Yellow);
@@ -375,6 +388,42 @@ static void ShowCredits(GameSceen& currentSceen)
 			if (event.mouseButton.button == Mouse::Left)
 			{
 				const char* url = "https://github.com/juandigilio";
+				char command[256];
+				snprintf(command, sizeof(command), "start %s", url);
+				system(command);
+			}
+		}
+	}
+
+	if (TextMouseCollition(line9))
+	{
+
+		line6.setFillColor(Color::Yellow);
+		window.draw(line6);
+
+		if (event.type == Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				const char* url = "https://mateo-monastra.itch.io/";
+				char command[256];
+				snprintf(command, sizeof(command), "start %s", url);
+				system(command);
+			}
+		}
+	}
+
+	if (TextMouseCollition(line10))
+	{
+
+		line6.setFillColor(Color::Yellow);
+		window.draw(line6);
+
+		if (event.type == Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				const char* url = "https://github.com/MateoMonastra";
 				char command[256];
 				snprintf(command, sizeof(command), "start %s", url);
 				system(command);
