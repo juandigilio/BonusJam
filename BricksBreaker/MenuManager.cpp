@@ -119,14 +119,29 @@ static void Draw()
 	window.draw(instructionsText);
 }
 
-static void GetInput(GameSceen& currentSceen)
+static bool TextMouseCollition(sf::Text& line)
 {
 	Vector2f cursor = static_cast<Vector2f>(Mouse::getPosition(window));
 
-	if (cursor.x >= acidBrick.getPosition().x &&
-		cursor.x <= acidBrick.getPosition().x + acidBrick.getGlobalBounds().width &&
-		cursor.y >= acidBrick.getPosition().y &&
-		cursor.y <= acidBrick.getPosition().y + acidBrick.getGlobalBounds().height) 
+	return cursor.x >= line.getPosition().x &&
+		cursor.x <= line.getPosition().x + line.getGlobalBounds().width &&
+		cursor.y >= line.getPosition().y &&
+		cursor.y <= line.getPosition().y + line.getGlobalBounds().height;
+}
+
+static bool MouseButtonColition(sf::Sprite button)
+{
+	Vector2i cursor =Mouse::getPosition(window);
+
+	return cursor.x >= button.getPosition().x &&
+		cursor.x <= button.getPosition().x + button.getGlobalBounds().width &&
+		cursor.y >= button.getPosition().y &&
+		cursor.y <= button.getPosition().y + button.getGlobalBounds().height;
+}
+
+static void GetInput(GameSceen& currentSceen)
+{
+	if (MouseButtonColition(acidBrick))
 	{
 
 		playText.setFillColor(Color::Yellow);
@@ -145,10 +160,7 @@ static void GetInput(GameSceen& currentSceen)
 		playText.setFillColor(Color::White);
 	}
 
-	if (cursor.x >= stoneBrick[0].getPosition().x &&
-		cursor.x <= stoneBrick[0].getPosition().x + stoneBrick[0].getGlobalBounds().width &&
-		cursor.y >= stoneBrick[0].getPosition().y &&
-		cursor.y <= stoneBrick[0].getPosition().y + stoneBrick[0].getGlobalBounds().height)
+	if (MouseButtonColition(stoneBrick[0]))
 	{
 
 		exitText.setFillColor(Color::Yellow);
@@ -167,10 +179,7 @@ static void GetInput(GameSceen& currentSceen)
 		exitText.setFillColor(Color::White);
 	}
 
-	if (cursor.x >= bigBrick.getPosition().x &&
-		cursor.x <= bigBrick.getPosition().x + bigBrick.getGlobalBounds().width &&
-		cursor.y >= bigBrick.getPosition().y &&
-		cursor.y <= bigBrick.getPosition().y + bigBrick.getGlobalBounds().height)
+	if (MouseButtonColition(bigBrick))
 	{
 
 		creditsText.setFillColor(Color::Yellow);
@@ -189,10 +198,7 @@ static void GetInput(GameSceen& currentSceen)
 		creditsText.setFillColor(Color::White);
 	}
 	
-	if (cursor.x >= iceBrick.getPosition().x &&
-		cursor.x <= iceBrick.getPosition().x + iceBrick.getGlobalBounds().width &&
-		cursor.y >= iceBrick.getPosition().y &&
-		cursor.y <= iceBrick.getPosition().y + iceBrick.getGlobalBounds().height)
+	if (MouseButtonColition(iceBrick))
 	{
 
 		instructionsText.setFillColor(Color::Yellow);
@@ -279,34 +285,58 @@ static void ShowCredits(GameSceen& currentSceen)
 	line1.setCharacterSize(50);
 
 	Text line2;
-	line2.setString("Juan Ignacio Digilio && Mateo Viko Monastra");
+	line2.setString("Juan Ignacio Digilio");
 	line2.setPosition(center - (line2.getGlobalBounds().width / 2.0f), 40.0f);
 	line2.setFont(menuFont);
 	line2.setCharacterSize(50);
 
 	Text line3;
-	line3.setString("Image Campus students (First time with SFML)");
-	line3.setPosition(center - (line3.getGlobalBounds().width / 2.0f), 60.0f);
+	line3.setString("&&");
+	line3.setPosition(center - (line2.getGlobalBounds().width / 2.0f), 60.0f);
 	line3.setFont(menuFont);
 	line3.setCharacterSize(50);
 
 	Text line4;
-	line4.setString("1st year of video games development");
-	line4.setPosition(center - (line4.getGlobalBounds().width / 2.0f), 80.0f);
+	line4.setString("Mateo Viko Monastra");
+	line4.setPosition(center - (line2.getGlobalBounds().width / 2.0f), 80.0f);
 	line4.setFont(menuFont);
 	line4.setCharacterSize(50);
 
 	Text line5;
-	line5.setString("https://juandigilio.itch.io/");
-	line5.setPosition(center - (line5.getGlobalBounds().width / 2.0f), 100.0f);
+	line5.setString("Image Campus students (First time with SFML)");
+	line5.setPosition(center - (line3.getGlobalBounds().width / 2.0f), 100.0f);
 	line5.setFont(menuFont);
 	line5.setCharacterSize(50);
 
 	Text line6;
-	line6.setString("https://github.com/juandigilio");
-	line6.setPosition(center - (line6.getGlobalBounds().width / 2.0f), 120.0f);
+	line6.setString("1st year of video games development");
+	line6.setPosition(center - (line4.getGlobalBounds().width / 2.0f), 120.0f);
 	line6.setFont(menuFont);
 	line6.setCharacterSize(50);
+
+	Text line7;
+	line7.setString("https://juandigilio.itch.io/");
+	line7.setPosition(center - (line5.getGlobalBounds().width / 2.0f), 140.0f);
+	line7.setFont(menuFont);
+	line7.setCharacterSize(50);
+
+	Text line8;
+	line8.setString("https://github.com/juandigilio");
+	line8.setPosition(center - (line6.getGlobalBounds().width / 2.0f), 160.0f);
+	line8.setFont(menuFont);
+	line8.setCharacterSize(50);
+
+	Text line9;
+	line9.setString("https://mateo-monastra.itch.io/");
+	line9.setPosition(center - (line6.getGlobalBounds().width / 2.0f), 180.0f);
+	line9.setFont(menuFont);
+	line9.setCharacterSize(50);
+
+	Text line10;
+	line10.setString("https://github.com/MateoMonastra");
+	line10.setPosition(center - (line6.getGlobalBounds().width / 2.0f), 200.0f);
+	line10.setFont(menuFont);
+	line10.setCharacterSize(50);
 
 
 	window.draw(menuBackground);
@@ -316,8 +346,10 @@ static void ShowCredits(GameSceen& currentSceen)
 	window.draw(line4);
 	window.draw(line5);
 	window.draw(line6);
-
-	Vector2f cursor = static_cast<Vector2f>(Mouse::getPosition(window));
+	window.draw(line7);
+	window.draw(line8);
+	window.draw(line9);
+	window.draw(line10);
 
 	if (event.type == Event::KeyPressed)
 	{
@@ -327,10 +359,7 @@ static void ShowCredits(GameSceen& currentSceen)
 		}
 	}
 
-	if (cursor.x >= line5.getPosition().x &&
-		cursor.x <= line5.getPosition().x + line5.getGlobalBounds().width &&
-		cursor.y >= line5.getPosition().y &&
-		cursor.y <= line5.getPosition().y + line5.getGlobalBounds().height)
+	if (TextMouseCollition(line7))
 	{
 
 		line5.setFillColor(Color::Yellow);
@@ -348,10 +377,7 @@ static void ShowCredits(GameSceen& currentSceen)
 		}
 	}
 
-	if (cursor.x >= line6.getPosition().x &&
-		cursor.x <= line6.getPosition().x + line6.getGlobalBounds().width &&
-		cursor.y >= line6.getPosition().y &&
-		cursor.y <= line6.getPosition().y + line6.getGlobalBounds().height)
+	if (TextMouseCollition(line8))
 	{
 
 		line6.setFillColor(Color::Yellow);
@@ -368,7 +394,44 @@ static void ShowCredits(GameSceen& currentSceen)
 			}
 		}
 	}
+
+	if (TextMouseCollition(line9))
+	{
+
+		line6.setFillColor(Color::Yellow);
+		window.draw(line6);
+
+		if (event.type == Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				const char* url = "https://mateo-monastra.itch.io/";
+				char command[256];
+				snprintf(command, sizeof(command), "start %s", url);
+				system(command);
+			}
+		}
+	}
+
+	if (TextMouseCollition(line10))
+	{
+
+		line6.setFillColor(Color::Yellow);
+		window.draw(line6);
+
+		if (event.type == Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == Mouse::Left)
+			{
+				const char* url = "https://github.com/MateoMonastra";
+				char command[256];
+				snprintf(command, sizeof(command), "start %s", url);
+				system(command);
+			}
+		}
+	}
 }
+
 
 void RunGame()
 {
